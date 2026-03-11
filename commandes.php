@@ -1,0 +1,222 @@
+<?php
+/**
+ * GestSecel - Commandes (Employé : créer + suivi | Admin : valider/refuser)
+ */
+require_once __DIR__ . '/config/config.php';
+require_once __DIR__ . '/config/database.php';
+require_once __DIR__ . '/includes/auth.php';
+
+secel_require_login();
+
+$is_admin = secel_is_admin();
+$user_id = secel_user()['id'];
+$id_commande = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+
+// Détail d'une commande
+$commande = null;
+$details = [];
+if ($id_commande > 0) {
+    $stmt = $pdo->prepare('SELECT c.*, u.nom as u_nom, u.prenom as u_prenom FROM commandes c JOIN utilisateurs u ON u.id = c.user_id WHERE c.id = ?');
+    $stmt->execute([$id_commande]);
+    $commande = $stmt->fetch();
+    if ($commande && ($is_admin || (int)$commande['user_id'] === $user_id)) {
+        $stmt2 = $pdo->prepare('SELECT d.*, p.reference, p.nom as produit_nom, p.stock_actuel FROM details_commande d JOIN produits p ON p.id = d.id_produit WHERE d.id_commande = ?');
+        $stmt2->execute([$id_commande]);
+        $details = $stmt2->fetchAll();
+    } else {
+        $commande = null;
+    }
+}
+
+// Liste des commandes (pour la page liste) + produits pour formulaire nouvelle commande
+$liste_commandes = [];
+$prods = [];
+if (!$commande) {
+    // L'administrateur voit toutes les commandes ; l'employé voit uniquement les siennes
+    $sql = 'SELECT c.id, c.date_creation, c.statut, c.motif, u.nom, u.prenom FROM commandes c JOIN utilisateurs u ON u.id = c.user_id';
+    $params = [];
+    if (!$is_admin) {
+        $sql .= ' WHERE c.user_id = ?';
+        $params[] = $user_id;
+    }
+    $sql .= ' ORDER BY c.date_creation DESC';
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($params);
+    $liste_commandes = $stmt->fetchAll();
+    $prods = $pdo->query('SELECT id, reference, nom, stock_actuel FROM produits ORDER BY nom')->fetchAll();
+}
+?>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Commandes - <?= htmlspecialchars(APP_NAME) ?></title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="app-wrap">
+<?php include INCLUDES_PATH . 'header.php'; ?>
+<main class="main-content">
+  <h1 class="page-title">Commandes</h1>
+
+  <?php if (isset($_GET['msg']) && $_GET['msg'] === 'ok'): ?>
+  <div class="alert alert-success" id="flash">Commande enregistrée.</div>
+  <?php endif; ?>
+  <?php if (isset($_GET['msg']) && $_GET['msg'] === 'validee'): ?>
+  <div class="alert alert-success" id="flash">Commande validée. Stocks mis à jour.</div>
+  <?php endif; ?>
+  <?php if (isset($_GET['msg']) && $_GET['msg'] === 'refusee'): ?>
+  <div class="alert alert-info" id="flash">Commande refusée.</div>
+  <?php endif; ?>
+
+  <?php if ($commande): ?>
+  <!-- Détail commande -->
+  <p><a href="commandes.php" class="btn btn-secondary">← Retour à la liste</a></p>
+  <div class="table-wrap">
+    <table class="data-table">
+      <tr><th>N° commande</th><td>#<?= (int)$commande['id'] ?></td></tr>
+      <tr><th>Date</th><td><?= date('d/m/Y H:i', strtotime($commande['date_creation'])) ?></td></tr>
+      <tr><th>Demandeur</th><td><?= htmlspecialchars($commande['u_prenom'] . ' ' . $commande['u_nom']) ?></td></tr>
+      <tr><th>Statut</th><td><span class="badge badge-<?= htmlspecialchars($commande['statut']) ?>"><?= htmlspecialchars(ucfirst(str_replace('_', ' ', $commande['statut']))) ?></span></td></tr>
+      <?php if ($commande['motif']): ?><tr><th>Motif demande</th><td><?= htmlspecialchars($commande['motif']) ?></td></tr><?php endif; ?>
+      <?php if ($commande['motif_refus']): ?><tr><th>Motif refus</th><td><?= htmlspecialchars($commande['motif_refus']) ?></td></tr><?php endif; ?>
+    </table>
+  </div>
+  <h3 style="margin-top:20px;">Lignes de la commande</h3>
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Produit</th>
+          <th>Référence</th>
+          <th>Quantité demandée</th>
+          <th>Quantité validée</th>
+          <?php if ($is_admin && $commande['statut'] === 'en_attente'): ?><th>Valider</th><?php endif; ?>
+        </tr>
+      </thead>
+      <tbody>
+        <?php foreach ($details as $d): ?>
+        <tr>
+          <td><?= htmlspecialchars($d['produit_nom']) ?></td>
+          <td><?= htmlspecialchars($d['reference']) ?></td>
+          <td><?= (int)$d['qte_demandee'] ?></td>
+          <td><?= (int)$d['qte_validee'] ?> (stock dispo: <?= (int)$d['stock_actuel'] ?>)</td>
+          <?php if ($is_admin && $commande['statut'] === 'en_attente'): ?>
+          <td>
+            <input type="number" min="0" max="<?= min((int)$d['qte_demandee'], (int)$d['stock_actuel']) ?>" value="<?= min((int)$d['qte_demandee'], (int)$d['stock_actuel']) ?>" class="qte-validee-input" data-detail-id="<?= (int)$d['id'] ?>" data-max="<?= (int)$d['stock_actuel'] ?>" style="width:70px;">
+          </td>
+          <?php endif; ?>
+        </tr>
+        <?php endforeach; ?>
+      </tbody>
+    </table>
+  </div>
+  <?php if ($is_admin && $commande['statut'] === 'en_attente'): ?>
+  <div class="toolbar" style="margin-top:16px;">
+    <button type="button" class="btn btn-primary" id="btn-valider-commande" data-id="<?= (int)$commande['id'] ?>">Valider (quantités ci-dessus)</button>
+    <button type="button" class="btn btn-danger" id="btn-refuser-commande" data-id="<?= (int)$commande['id'] ?>">Refuser la commande</button>
+  </div>
+  <div id="validation-msg"></div>
+  <?php endif; ?>
+
+  <?php else: ?>
+  <!-- Liste des commandes -->
+  <div class="toolbar">
+    <button type="button" class="btn btn-primary" id="btn-nouvelle-commande">Nouvelle commande</button>
+  </div>
+
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>N°</th>
+          <th>Date</th>
+          <?php if ($is_admin): ?><th>Demandeur</th><?php endif; ?>
+          <th>Statut</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php foreach ($liste_commandes as $c): ?>
+        <tr>
+          <td>#<?= (int)$c['id'] ?></td>
+          <td><?= date('d/m/Y H:i', strtotime($c['date_creation'])) ?></td>
+          <?php if ($is_admin): ?><td><?= htmlspecialchars($c['prenom'] . ' ' . $c['nom']) ?></td><?php endif; ?>
+          <td><span class="badge badge-<?= htmlspecialchars($c['statut']) ?>"><?= htmlspecialchars(ucfirst(str_replace('_', ' ', $c['statut']))) ?></span></td>
+          <td><a href="commandes.php?id=<?= (int)$c['id'] ?>" class="btn btn-sm btn-secondary">Voir</a></td>
+        </tr>
+        <?php endforeach; ?>
+      </tbody>
+    </table>
+  </div>
+  <?php if (empty($liste_commandes)): ?>
+  <p>Aucune commande.</p>
+  <?php endif; ?>
+  <?php endif; ?>
+</main>
+
+<!-- Modal Nouvelle commande -->
+<div class="modal-overlay" id="modal-nouvelle-commande">
+  <div class="modal">
+    <h2>Nouvelle commande</h2>
+    <form id="form-nouvelle-commande">
+      <div class="form-group">
+        <label for="commande-motif">Motif de la demande *</label>
+        <textarea id="commande-motif" name="motif" class="form-control" rows="2" required></textarea>
+      </div>
+      <div class="form-group">
+        <label>Produits à commander</label>
+        <div id="lignes-commande">
+          <div class="ligne-commande">
+            <select name="produit_id[]" class="form-control produit-select">
+              <option value="">-- Choisir un produit --</option>
+              <?php
+              $prods = $pdo->query('SELECT id, reference, nom, stock_actuel FROM produits ORDER BY nom')->fetchAll();
+              foreach ($prods as $pr): ?>
+              <option value="<?= (int)$pr['id'] ?>" data-stock="<?= (int)$pr['stock_actuel'] ?>"><?= htmlspecialchars($pr['reference'] . ' - ' . $pr['nom']) ?> (stock: <?= (int)$pr['stock_actuel'] ?>)</option>
+              <?php endforeach; ?>
+            </select>
+            <input type="number" name="qte[]" class="form-control" min="1" value="1" style="width:80px;" placeholder="Qté">
+          </div>
+        </div>
+        <button type="button" class="btn btn-sm btn-secondary" id="btn-ajouter-ligne">+ Ajouter une ligne</button>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" id="btn-cancel-commande">Annuler</button>
+        <button type="submit" class="btn btn-primary">Créer la commande</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal Refus -->
+<div class="modal-overlay" id="modal-refus-commande">
+  <div class="modal">
+    <h2>Refuser la commande</h2>
+    <form id="form-refus-commande">
+      <input type="hidden" id="refus-commande-id" name="id" value="">
+      <div class="form-group">
+        <label for="refus-motif">Motif du refus *</label>
+        <textarea id="refus-motif" name="motif_refus" class="form-control" rows="3" required></textarea>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" id="btn-cancel-refus">Annuler</button>
+        <button type="submit" class="btn btn-danger">Refuser</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<?php include INCLUDES_PATH . 'footer.php'; ?>
+<script src="assets/js/app.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  window.GestSecelCommandes = {
+    csrf: '<?= htmlspecialchars(secel_csrf_token()) ?>',
+    isAdmin: <?= $is_admin ? 'true' : 'false' ?>,
+    produits: <?= json_encode($prods ?? []) ?>
+  };
+});
+</script>
+</body>
+</html>
