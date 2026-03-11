@@ -35,7 +35,7 @@ $liste_produits = $is_admin ? $pdo->query('SELECT id, reference, nom FROM produi
 
   <?php if ($is_admin): ?>
   <div class="toolbar">
-    <button type="button" class="btn btn-primary" id="btn-mouvement">Ajuster un stock</button>
+    <a href="ajouter_stock.php" class="btn btn-primary">Ajuster un stock</a>
   </div>
   <?php endif; ?>
 
@@ -61,8 +61,7 @@ $liste_produits = $is_admin ? $pdo->query('SELECT id, reference, nom FROM produi
           <td><?= (int)$p['seuil_alerte'] ?></td>
           <?php if ($is_admin): ?>
           <td class="actions">
-            <button type="button" class="btn btn-sm btn-secondary btn-histoire" data-id="<?= (int)$p['id'] ?>" data-ref="<?= htmlspecialchars($p['reference']) ?>">Historique</button>
-            <button type="button" class="btn btn-sm btn-primary btn-open-mouvement" data-id="<?= (int)$p['id'] ?>" data-ref="<?= htmlspecialchars($p['reference']) ?>">Ajuster</button>
+            <a href="ajouter_stock.php?id=<?= (int)$p['id'] ?>" class="btn btn-sm btn-primary">Ajuster</a>
           </td>
           <?php endif; ?>
         </tr>
@@ -71,57 +70,6 @@ $liste_produits = $is_admin ? $pdo->query('SELECT id, reference, nom FROM produi
     </table>
   </div>
 </main>
-
-<?php if ($is_admin): ?>
-<!-- Modal Ajustement -->
-<div class="modal-overlay" id="modal-mouvement">
-  <div class="modal">
-    <h2>Ajuster le stock</h2>
-    <form id="form-mouvement">
-      <input type="hidden" name="produit_id" id="mouvement-produit-id" value="">
-      <div class="form-group" id="group-select-produit">
-        <label for="mouvement-produit-select">Produit *</label>
-        <select id="mouvement-produit-select" class="form-control">
-          <option value="">-- Choisir un produit --</option>
-          <?php foreach ($liste_produits as $pr): ?>
-          <option value="<?= (int)$pr['id'] ?>"><?= htmlspecialchars($pr['reference'] . ' - ' . $pr['nom']) ?></option>
-          <?php endforeach; ?>
-        </select>
-      </div>
-      <p id="mouvement-produit-ref-line" style="display:none;"><strong>Produit :</strong> <span id="mouvement-produit-ref"></span></p>
-      <div class="form-group">
-        <label>Type</label>
-        <select id="mouvement-type" name="type" class="form-control">
-          <option value="ajustement_plus">Augmentation</option>
-          <option value="ajustement_moins">Diminution</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="mouvement-qte">Quantité *</label>
-        <input type="number" id="mouvement-qte" name="qte" class="form-control" min="1" required>
-      </div>
-      <div class="form-group">
-        <label for="mouvement-motif">Motif *</label>
-        <textarea id="mouvement-motif" name="motif" class="form-control" rows="2" required></textarea>
-      </div>
-      <div class="modal-actions">
-        <button type="button" class="btn btn-secondary" id="btn-cancel-mouvement">Annuler</button>
-        <button type="submit" class="btn btn-primary">Enregistrer</button>
-      </div>
-    </form>
-  </div>
-</div>
-<!-- Modal Historique -->
-<div class="modal-overlay" id="modal-histoire">
-  <div class="modal">
-    <h2>Historique des mouvements — <span id="histoire-ref"></span></h2>
-    <div id="histoire-content"></div>
-    <div class="modal-actions">
-      <button type="button" class="btn btn-secondary" id="btn-close-histoire">Fermer</button>
-    </div>
-  </div>
-</div>
-<?php endif; ?>
 
 <?php include INCLUDES_PATH . 'footer.php'; ?>
 <script src="assets/js/app.js"></script>

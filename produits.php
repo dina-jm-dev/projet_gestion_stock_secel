@@ -37,7 +37,7 @@ $produits = $stmt->fetchAll();
 
   <?php if ($is_admin): ?>
   <div class="toolbar">
-    <button type="button" class="btn btn-primary" id="btn-add-product">Ajouter un produit</button>
+    <a href="ajouter_produit.php" class="btn btn-primary">Ajouter un produit</a>
   </div>
   <?php endif; ?>
 
@@ -65,7 +65,7 @@ $produits = $stmt->fetchAll();
           <td><?= (int)$p['seuil_alerte'] ?></td>
           <?php if ($is_admin): ?>
           <td class="actions">
-            <button type="button" class="btn btn-sm btn-secondary btn-edit-product" data-id="<?= (int)$p['id'] ?>">Modifier</button>
+            <a href="ajouter_produit.php?id=<?= (int)$p['id'] ?>" class="btn btn-sm btn-secondary">Modifier</a>
             <button type="button" class="btn btn-sm btn-danger btn-delete-product" data-id="<?= (int)$p['id'] ?>" data-ref="<?= htmlspecialchars($p['reference']) ?>">Supprimer</button>
           </td>
           <?php endif; ?>
@@ -78,57 +78,6 @@ $produits = $stmt->fetchAll();
   <p>Aucun produit trouvé.</p>
   <?php endif; ?>
 </main>
-
-<?php if ($is_admin): ?>
-<!-- Modal Ajout/Modification produit -->
-<div class="modal-overlay" id="modal-product">
-  <div class="modal">
-    <h2 id="modal-product-title">Ajouter un produit</h2>
-    <form id="form-product">
-      <input type="hidden" name="id" id="product-id" value="">
-      <div class="form-group">
-        <label for="product-reference">Référence *</label>
-        <input type="text" id="product-reference" name="reference" class="form-control" required>
-      </div>
-      <div class="form-group">
-        <label for="product-nom">Nom *</label>
-        <input type="text" id="product-nom" name="nom" class="form-control" required>
-      </div>
-      <div class="form-group">
-        <label for="product-categorie">Catégorie *</label>
-        <input type="text" id="product-categorie" name="categorie" class="form-control" required>
-      </div>
-      <div class="form-group">
-        <label for="product-prix">Prix unitaire (FCFA) *</label>
-        <input type="number" id="product-prix" name="prix" class="form-control" step="0.01" min="0" required>
-      </div>
-      <div class="form-group">
-        <label for="product-stock">Stock initial</label>
-        <input type="number" id="product-stock" name="stock_actuel" class="form-control" min="0" value="0">
-      </div>
-      <div class="form-group">
-        <label for="product-seuil">Seuil d'alerte</label>
-        <input type="number" id="product-seuil" name="seuil_alerte" class="form-control" min="0" value="5">
-      </div>
-      <div class="modal-actions">
-        <button type="button" class="btn btn-secondary" id="btn-cancel-product">Annuler</button>
-        <button type="submit" class="btn btn-primary">Enregistrer</button>
-      </div>
-    </form>
-  </div>
-</div>
-<!-- Modal Confirmation suppression -->
-<div class="modal-overlay" id="modal-delete-product">
-  <div class="modal">
-    <h2>Confirmer la suppression</h2>
-    <p>Voulez-vous vraiment supprimer le produit <strong id="delete-product-ref"></strong> ? Le stock doit être nul.</p>
-    <div class="modal-actions">
-      <button type="button" class="btn btn-secondary" id="btn-cancel-delete-product">Annuler</button>
-      <button type="button" class="btn btn-danger" id="btn-confirm-delete-product">Supprimer</button>
-    </div>
-  </div>
-</div>
-<?php endif; ?>
 
 <?php include INCLUDES_PATH . 'footer.php'; ?>
 <script src="assets/js/app.js"></script>

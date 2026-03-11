@@ -122,7 +122,7 @@ if (!$commande) {
   <?php else: ?>
   <!-- Liste des commandes -->
   <div class="toolbar">
-    <button type="button" class="btn btn-primary" id="btn-nouvelle-commande">Nouvelle commande</button>
+    <a href="ajouter_commande.php" class="btn btn-primary">Nouvelle commande</a>
   </div>
 
   <div class="table-wrap">
@@ -155,57 +155,7 @@ if (!$commande) {
   <?php endif; ?>
 </main>
 
-<!-- Modal Nouvelle commande -->
-<div class="modal-overlay" id="modal-nouvelle-commande">
-  <div class="modal">
-    <h2>Nouvelle commande</h2>
-    <form id="form-nouvelle-commande">
-      <div class="form-group">
-        <label for="commande-motif">Motif de la demande *</label>
-        <textarea id="commande-motif" name="motif" class="form-control" rows="2" required></textarea>
-      </div>
-      <div class="form-group">
-        <label>Produits à commander</label>
-        <div id="lignes-commande">
-          <div class="ligne-commande">
-            <select name="produit_id[]" class="form-control produit-select">
-              <option value="">-- Choisir un produit --</option>
-              <?php
-              $prods = $pdo->query('SELECT id, reference, nom, stock_actuel FROM produits ORDER BY nom')->fetchAll();
-              foreach ($prods as $pr): ?>
-              <option value="<?= (int)$pr['id'] ?>" data-stock="<?= (int)$pr['stock_actuel'] ?>"><?= htmlspecialchars($pr['reference'] . ' - ' . $pr['nom']) ?> (stock: <?= (int)$pr['stock_actuel'] ?>)</option>
-              <?php endforeach; ?>
-            </select>
-            <input type="number" name="qte[]" class="form-control" min="1" value="1" style="width:80px;" placeholder="Qté">
-          </div>
-        </div>
-        <button type="button" class="btn btn-sm btn-secondary" id="btn-ajouter-ligne">+ Ajouter une ligne</button>
-      </div>
-      <div class="modal-actions">
-        <button type="button" class="btn btn-secondary" id="btn-cancel-commande">Annuler</button>
-        <button type="submit" class="btn btn-primary">Créer la commande</button>
-      </div>
-    </form>
-  </div>
-</div>
 
-<!-- Modal Refus -->
-<div class="modal-overlay" id="modal-refus-commande">
-  <div class="modal">
-    <h2>Refuser la commande</h2>
-    <form id="form-refus-commande">
-      <input type="hidden" id="refus-commande-id" name="id" value="">
-      <div class="form-group">
-        <label for="refus-motif">Motif du refus *</label>
-        <textarea id="refus-motif" name="motif_refus" class="form-control" rows="3" required></textarea>
-      </div>
-      <div class="modal-actions">
-        <button type="button" class="btn btn-secondary" id="btn-cancel-refus">Annuler</button>
-        <button type="submit" class="btn btn-danger">Refuser</button>
-      </div>
-    </form>
-  </div>
-</div>
 
 <?php include INCLUDES_PATH . 'footer.php'; ?>
 <script src="assets/js/app.js"></script>

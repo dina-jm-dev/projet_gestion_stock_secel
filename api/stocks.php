@@ -67,20 +67,6 @@ switch ($action) {
         }
         break;
 
-    case 'historique':
-        $produit_id = (int)($_GET['produit_id'] ?? 0);
-        if ($produit_id <= 0) {
-            echo json_encode(['success' => false, 'message' => 'ID invalide.']);
-            exit;
-        }
-        $st = $pdo->prepare('SELECT m.type, m.qte, m.stock_avant, m.stock_apres, m.date_mouvement, m.motif, u.prenom, u.nom 
-            FROM mouvements_stock m 
-            LEFT JOIN utilisateurs u ON u.id = m.user_id 
-            WHERE m.produit_id = ? ORDER BY m.date_mouvement DESC LIMIT 50');
-        $st->execute([$produit_id]);
-        $rows = $st->fetchAll();
-        echo json_encode(['success' => true, 'mouvements' => $rows]);
-        break;
 
     default:
         http_response_code(400);

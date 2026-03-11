@@ -38,7 +38,7 @@ $utilisateurs = $stmt->fetchAll();
   <?php endif; ?>
 
   <div class="toolbar">
-    <button type="button" class="btn btn-primary" id="btn-add-user">Ajouter un utilisateur</button>
+    <a href="ajouter_utilisateur.php" class="btn btn-primary">Ajouter un utilisateur</a>
   </div>
 
   <div class="table-wrap">
@@ -61,10 +61,16 @@ $utilisateurs = $stmt->fetchAll();
           <td><?= htmlspecialchars($u['nom']) ?></td>
           <td><?= htmlspecialchars($u['prenom']) ?></td>
           <td><?= $u['role'] === 'admin' ? 'Administrateur' : 'Employé' ?></td>
-          <td><?= (int)$u['actif'] ? 'Oui' : 'Non' ?></td>
+          <td>
+            <?php if ((int)$u['actif']): ?>
+              <span class="badge badge-actif">Actif</span>
+            <?php else: ?>
+              <span class="badge badge-inactif">Inactif</span>
+            <?php endif; ?>
+          </td>
           <td><?= date('d/m/Y', strtotime($u['date_creation'])) ?></td>
           <td class="actions">
-            <button type="button" class="btn btn-sm btn-secondary btn-edit-user" data-id="<?= (int)$u['id'] ?>">Modifier</button>
+            <a href="ajouter_utilisateur.php?id=<?= (int)$u['id'] ?>" class="btn btn-sm btn-secondary">Modifier</a>
             <?php if ((int)$u['id'] !== secel_user()['id']): ?>
             <button type="button" class="btn btn-sm btn-danger btn-delete-user" data-id="<?= (int)$u['id'] ?>" data-login="<?= htmlspecialchars($u['login']) ?>">Supprimer / Désactiver</button>
             <?php endif; ?>
@@ -75,46 +81,6 @@ $utilisateurs = $stmt->fetchAll();
     </table>
   </div>
 </main>
-
-<!-- Modal Ajout/Modification utilisateur -->
-<div class="modal-overlay" id="modal-user">
-  <div class="modal">
-    <h2 id="modal-user-title">Ajouter un utilisateur</h2>
-    <form id="form-user">
-      <input type="hidden" name="id" id="user-id" value="">
-      <div class="form-group">
-        <label for="user-login">Login *</label>
-        <input type="text" id="user-login" name="login" class="form-control" required>
-      </div>
-      <div class="form-group">
-        <label for="user-password">Mot de passe <span id="pwd-optional">(laisser vide pour ne pas changer)</span></label>
-        <input type="password" id="user-password" name="password" class="form-control" autocomplete="new-password">
-      </div>
-      <div class="form-group">
-        <label for="user-nom">Nom *</label>
-        <input type="text" id="user-nom" name="nom" class="form-control" required>
-      </div>
-      <div class="form-group">
-        <label for="user-prenom">Prénom *</label>
-        <input type="text" id="user-prenom" name="prenom" class="form-control" required>
-      </div>
-      <div class="form-group">
-        <label for="user-role">Rôle *</label>
-        <select id="user-role" name="role" class="form-control">
-          <option value="employe">Employé</option>
-          <option value="admin">Administrateur</option>
-        </select>
-      </div>
-      <div class="form-group" id="group-actif">
-        <label><input type="checkbox" id="user-actif" name="actif" value="1" checked> Compte actif</label>
-      </div>
-      <div class="modal-actions">
-        <button type="button" class="btn btn-secondary" id="btn-cancel-user">Annuler</button>
-        <button type="submit" class="btn btn-primary">Enregistrer</button>
-      </div>
-    </form>
-  </div>
-</div>
 
 <?php include INCLUDES_PATH . 'footer.php'; ?>
 <script src="assets/js/app.js"></script>
