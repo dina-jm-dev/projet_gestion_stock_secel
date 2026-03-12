@@ -47,14 +47,7 @@ projet_gestion_stock_secel/
 3. **Configuration**  
    - Modifier si besoin `config/database.php` (hôte, nom de base, utilisateur, mot de passe).
 
-4. **Lancer l’installation**  
-   - Ouvrir `http://localhost/projet_gestion_stock_secel/install.php`  
-   - Comptes créés :  
-     - **Admin** : `admin` / `Admin123!`  
-     - **Employé** : `employe` / `Employe123!`  
-   - En production, supprimer ou protéger `install.php`.
-
-5. **Accès**  
+4. **Accès**  
    - `http://localhost/projet_gestion_stock_secel/` ou `login.php` pour se connecter.
 
 ## Rôles
