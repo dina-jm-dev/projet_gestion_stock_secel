@@ -32,8 +32,7 @@ projet_gestion_stock_secel/
 ├── produits.php       # Liste / CRUD produits
 ├── stocks.php         # Stocks, ajustements, historique
 ├── commandes.php      # Liste, détail, nouvelle commande, validation
-├── utilisateurs.php   # Gestion utilisateurs (admin)
-└── install.php        # Création BDD + comptes initiaux (à exécuter une fois)
+└── utilisateurs.php   # Gestion utilisateurs (admin)
 ```
 
 ## Installation
@@ -42,7 +41,7 @@ projet_gestion_stock_secel/
 
 2. **Base de données**  
    - Créer une base `gestion_stock_secel` 
-   - Ou importer `sql/schema.sql` puis exécuter une fois **install.php** dans le navigateur pour créer les utilisateurs initiaux.
+   - Ou importer `sql/schema.sql`
 
 3. **Configuration**  
    - Modifier si besoin `config/database.php` (hôte, nom de base, utilisateur, mot de passe).
