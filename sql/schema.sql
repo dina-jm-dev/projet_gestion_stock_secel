@@ -87,5 +87,3 @@ CREATE TABLE IF NOT EXISTS mouvements_stock (
 -- Les tokens CSRF seront stockés en session PHP
 
 SET FOREIGN_KEY_CHECKS = 1;
-
--- Utilisateurs initiaux : exécuter install.php une fois pour créer admin (Admin123!) et employe (Employe123!)
