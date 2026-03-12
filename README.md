@@ -41,7 +41,7 @@ projet_gestion_stock_secel/
 1. **Environnement** : PHP 8+, MySQL 8+, Apache (WAMP/XAMPP ou équivalent).
 
 2. **Base de données**  
-   - Créer une base `gestion_stock_secel` (ou laisser `install.php` la créer).  
+   - Créer une base `gestion_stock_secel` 
    - Ou importer `sql/schema.sql` puis exécuter une fois **install.php** dans le navigateur pour créer les utilisateurs initiaux.
 
 3. **Configuration**  
