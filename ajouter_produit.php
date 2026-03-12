@@ -30,41 +30,41 @@ $is_edit = $produit !== false && $produit !== null;
   <title><?= $is_edit ? 'Modifier' : 'Ajouter' ?> un produit - <?= htmlspecialchars(APP_NAME) ?></title>
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body class="app-wrap">
+<body class="conteneur-app">
 <?php include INCLUDES_PATH . 'header.php'; ?>
-<main class="main-content">
-  <h1 class="page-title"><?= $is_edit ? 'Modifier le produit' : 'Ajouter un produit' ?></h1>
+<main class="contenu-principal">
+  <h1 class="titre-page"><?= $is_edit ? 'Modifier le produit' : 'Ajouter un produit' ?></h1>
   
-  <div class="card" style="max-width: 600px; margin: 0 auto;">
+  <div class="carte" style="max-width: 600px; margin: 0 auto;">
     <form id="form-product">
       <input type="hidden" id="product-id" value="<?= $is_edit ? (int)$produit['id'] : '' ?>">
-      <div class="form-group">
+      <div class="form">
         <label for="product-reference">Référence *</label>
-        <input type="text" id="product-reference" class="form-control" value="<?= $is_edit ? htmlspecialchars($produit['reference']) : '' ?>" required>
+        <input type="text" id="product-reference" class="info-verification" value="<?= $is_edit ? htmlspecialchars($produit['reference']) : '' ?>" required>
       </div>
-      <div class="form-group">
+      <div class="form">
         <label for="product-nom">Nom *</label>
-        <input type="text" id="product-nom" class="form-control" value="<?= $is_edit ? htmlspecialchars($produit['nom']) : '' ?>" required>
+        <input type="text" id="product-nom" class="info-verification" value="<?= $is_edit ? htmlspecialchars($produit['nom']) : '' ?>" required>
       </div>
-      <div class="form-group">
+      <div class="form">
         <label for="product-categorie">Catégorie *</label>
-        <input type="text" id="product-categorie" class="form-control" value="<?= $is_edit ? htmlspecialchars($produit['categorie']) : '' ?>" required>
+        <input type="text" id="product-categorie" class="info-verification" value="<?= $is_edit ? htmlspecialchars($produit['categorie']) : '' ?>" required>
       </div>
-      <div class="form-group">
+      <div class="form">
         <label for="product-prix">Prix unitaire (FCFA) *</label>
-        <input type="number" id="product-prix" class="form-control" step="0.01" min="0" value="<?= $is_edit ? htmlspecialchars($produit['prix']) : '' ?>" required>
+        <input type="number" id="product-prix" class="info-verification" step="0.01" min="0" value="<?= $is_edit ? htmlspecialchars($produit['prix']) : '' ?>" required>
       </div>
-      <div class="form-group">
+      <div class="form">
         <label for="product-stock">Stock initial</label>
-        <input type="number" id="product-stock" class="form-control" min="0" value="<?= $is_edit ? htmlspecialchars($produit['stock_actuel']) : '0' ?>" <?= $is_edit ? 'disabled title="Stock modifiable dans le suivi des stocks"' : '' ?>>
+        <input type="number" id="product-stock" class="info-verification" min="0" value="<?= $is_edit ? htmlspecialchars($produit['stock_actuel']) : '0' ?>" <?= $is_edit ? 'disabled title="Stock modifiable dans le suivi des stocks"' : '' ?>>
       </div>
-      <div class="form-group">
+      <div class="form">
         <label for="product-seuil">Seuil d'alerte</label>
-        <input type="number" id="product-seuil" class="form-control" min="0" value="<?= $is_edit ? htmlspecialchars($produit['seuil_alerte']) : '5' ?>">
+        <input type="number" id="product-seuil" class="info-verification" min="0" value="<?= $is_edit ? htmlspecialchars($produit['seuil_alerte']) : '5' ?>">
       </div>
       <div style="margin-top: 20px; display: flex; gap: 10px;">
-        <button type="submit" class="btn btn-primary">Enregistrer</button>
-        <a href="produits.php" class="btn btn-secondary">Annuler</a>
+        <button type="submit" class="bouton bouton-principal">Enregistrer</button>
+        <a href="produits.php" class="bouton bouton-secondaire">Annuler</a>
       </div>
     </form>
   </div>

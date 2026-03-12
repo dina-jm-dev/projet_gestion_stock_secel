@@ -47,31 +47,31 @@ $dernieres_commandes = $stmt_cmd->fetchAll();
   <title>Tableau de bord - <?= htmlspecialchars(APP_NAME) ?></title>
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body class="app-wrap">
+<body class="conteneur-app">
 <?php include INCLUDES_PATH . 'header.php'; ?>
-<main class="main-content">
-  <h1 class="page-title">Tableau de bord</h1>
+<main class="contenu-principal">
+  <h1 class="titre-page">Tableau de bord</h1>
 
-  <div class="dashboard-cards">
-    <div class="card">
+  <div class="cartes-tableau-bord">
+    <div class="carte">
       <h3>Stocks sous seuil d'alerte</h3>
-      <div class="value"><?= $nb_stocks_critiques ?></div>
+      <div class="valeur"><?= $nb_stocks_critiques ?></div>
       <a href="stocks.php">Voir les stocks</a>
     </div>
-    <div class="card">
+    <div class="carte">
       <h3>Commandes en attente</h3>
-      <div class="value"><?= $nb_commandes_attente ?></div>
+      <div class="valeur"><?= $nb_commandes_attente ?></div>
       <a href="commandes.php">Voir les commandes</a>
     </div>
-    <div class="card">
+    <div class="carte">
       <h3>Nombre de produits</h3>
-      <div class="value"><?= $nb_produits ?></div>
+      <div class="valeur"><?= $nb_produits ?></div>
       <a href="produits.php">Voir les produits</a>
     </div>
     <?php if ($is_admin): ?>
-    <div class="card">
+    <div class="carte">
       <h3>Gestion utilisateurs</h3>
-      <div class="value">—</div>
+      <div class="valeur">—</div>
       <a href="utilisateurs.php">Gérer les utilisateurs</a>
     </div>
     <?php endif; ?>
@@ -82,8 +82,8 @@ $dernieres_commandes = $stmt_cmd->fetchAll();
     <?php if (empty($dernieres_commandes)): ?>
     <p>Aucune commande.</p>
     <?php else: ?>
-    <div class="table-wrap">
-      <table class="data-table">
+    <div class="conteneur-tableau">
+      <table class="tableau-donnees">
         <thead>
           <tr>
             <th>N°</th>
@@ -100,7 +100,7 @@ $dernieres_commandes = $stmt_cmd->fetchAll();
             <td><?= date('d/m/Y H:i', strtotime($c['date_creation'])) ?></td>
             <?php if ($is_admin): ?><td><?= htmlspecialchars($c['prenom'] . ' ' . $c['nom']) ?></td><?php endif; ?>
             <td><span class="badge badge-<?= htmlspecialchars($c['statut']) ?>"><?= htmlspecialchars(ucfirst(str_replace('_', ' ', $c['statut']))) ?></span></td>
-            <td><a href="commandes.php?id=<?= (int)$c['id'] ?>" class="btn btn-sm btn-secondary">Voir</a></td>
+            <td><a href="commandes.php?id=<?= (int)$c['id'] ?>" class="bouton bouton-petit bouton-secondaire">Voir</a></td>
           </tr>
           <?php endforeach; ?>
         </tbody>

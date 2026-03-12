@@ -23,26 +23,26 @@ $produits = $stmt->fetchAll();
   <title>Produits - <?= htmlspecialchars(APP_NAME) ?></title>
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body class="app-wrap">
+<body class="conteneur-app">
 <?php include INCLUDES_PATH . 'header.php'; ?>
-<main class="main-content">
-  <h1 class="page-title">Produits</h1>
+<main class="contenu-principal">
+  <h1 class="titre-page">Produits</h1>
 
   <?php if (isset($_GET['msg']) && $_GET['msg'] === 'ok'): ?>
-  <div class="alert alert-success" id="flash">Opération effectuée avec succès.</div>
+  <div class="alerte alerte-succes" id="flash">Opération effectuée avec succès.</div>
   <?php endif; ?>
   <?php if (isset($_GET['msg']) && $_GET['msg'] === 'erreur'): ?>
-  <div class="alert alert-error" id="flash">Une erreur est survenue.</div>
+  <div class="alerte alerte-danger" id="flash">Une erreur est survenue.</div>
   <?php endif; ?>
 
   <?php if ($is_admin): ?>
-  <div class="toolbar">
-    <a href="ajouter_produit.php" class="btn btn-primary">Ajouter un produit</a>
+  <div class="barre-outils">
+    <a href="ajouter_produit.php" class="bouton bouton-principal">Ajouter un produit</a>
   </div>
   <?php endif; ?>
 
-  <div class="table-wrap">
-    <table class="data-table">
+  <div class="conteneur-tableau">
+    <table class="tableau-donnees">
       <thead>
         <tr>
           <th>Référence</th>
@@ -65,8 +65,8 @@ $produits = $stmt->fetchAll();
           <td><?= (int)$p['seuil_alerte'] ?></td>
           <?php if ($is_admin): ?>
           <td class="actions">
-            <a href="ajouter_produit.php?id=<?= (int)$p['id'] ?>" class="btn btn-sm btn-secondary">Modifier</a>
-            <button type="button" class="btn btn-sm btn-danger btn-delete-product" data-id="<?= (int)$p['id'] ?>" data-ref="<?= htmlspecialchars($p['reference']) ?>">Supprimer</button>
+            <a href="ajouter_produit.php?id=<?= (int)$p['id'] ?>" class="bouton bouton-petit bouton-secondaire">Modifier</a>
+            <button type="button" class="bouton bouton-petit bouton-danger btn-delete-product" data-id="<?= (int)$p['id'] ?>" data-ref="<?= htmlspecialchars($p['reference']) ?>">Supprimer</button>
           </td>
           <?php endif; ?>
         </tr>

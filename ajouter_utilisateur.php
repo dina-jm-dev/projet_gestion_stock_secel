@@ -27,44 +27,44 @@ $is_edit = $user !== false && $user !== null;
   <title><?= $is_edit ? 'Modifier' : 'Ajouter' ?> un utilisateur - <?= htmlspecialchars(APP_NAME) ?></title>
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body class="app-wrap">
+<body class="conteneur-app">
 <?php include INCLUDES_PATH . 'header.php'; ?>
-<main class="main-content">
-  <h1 class="page-title"><?= $is_edit ? 'Modifier l\'utilisateur' : 'Ajouter un utilisateur' ?></h1>
+<main class="contenu-principal">
+  <h1 class="titre-page"><?= $is_edit ? 'Modifier l\'utilisateur' : 'Ajouter un utilisateur' ?></h1>
   
-  <div class="card" style="max-width: 600px; margin: 0 auto;">
+  <div class="carte" style="max-width: 600px; margin: 0 auto;">
     <form id="form-user">
       <input type="hidden" id="user-id" value="<?= $is_edit ? (int)$user['id'] : '' ?>">
       
-      <div class="form-group">
+      <div class="form">
         <label for="user-login">Login *</label>
-        <input type="text" id="user-login" class="form-control" value="<?= $is_edit ? htmlspecialchars($user['login']) : '' ?>" required>
+        <input type="text" id="user-login" class="info-verification" value="<?= $is_edit ? htmlspecialchars($user['login']) : '' ?>" required>
       </div>
       
-      <div class="form-group">
+      <div class="form">
         <label for="user-password">Mot de passe <?= $is_edit ? '<span id="pwd-optional" style="font-size:0.9em;color:#666;">(laisser vide pour ne pas changer)</span>' : '*' ?></label>
-        <input type="password" id="user-password" class="form-control" autocomplete="new-password" <?= $is_edit ? '' : 'required' ?>>
+        <input type="password" id="user-password" class="info-verification" autocomplete="new-password" <?= $is_edit ? '' : 'required' ?>>
       </div>
       
-      <div class="form-group">
+      <div class="form">
         <label for="user-nom">Nom *</label>
-        <input type="text" id="user-nom" class="form-control" value="<?= $is_edit ? htmlspecialchars($user['nom']) : '' ?>" required>
+        <input type="text" id="user-nom" class="info-verification" value="<?= $is_edit ? htmlspecialchars($user['nom']) : '' ?>" required>
       </div>
       
-      <div class="form-group">
+      <div class="form">
         <label for="user-prenom">Prénom *</label>
-        <input type="text" id="user-prenom" class="form-control" value="<?= $is_edit ? htmlspecialchars($user['prenom']) : '' ?>" required>
+        <input type="text" id="user-prenom" class="info-verification" value="<?= $is_edit ? htmlspecialchars($user['prenom']) : '' ?>" required>
       </div>
       
-      <div class="form-group">
+      <div class="form">
         <label for="user-role">Rôle *</label>
-        <select id="user-role" class="form-control" required>
+        <select id="user-role" class="info-verification" required>
           <option value="employe" <?= ($is_edit && $user['role'] === 'employe') ? 'selected' : '' ?>>Employé</option>
           <option value="admin" <?= ($is_edit && $user['role'] === 'admin') ? 'selected' : '' ?>>Administrateur</option>
         </select>
       </div>
       
-      <div class="form-group" style="margin-top: 15px;">
+      <div class="form" style="margin-top: 15px;">
         <label>
           <input type="checkbox" id="user-actif" value="1" <?= (!$is_edit || (int)$user['actif'] === 1) ? 'checked' : '' ?>>
           Compte actif
@@ -72,8 +72,8 @@ $is_edit = $user !== false && $user !== null;
       </div>
       
       <div style="margin-top: 20px; display: flex; gap: 10px;">
-        <button type="submit" class="btn btn-primary">Enregistrer</button>
-        <a href="utilisateurs.php" class="btn btn-secondary">Annuler</a>
+        <button type="submit" class="bouton bouton-principal">Enregistrer</button>
+        <a href="utilisateurs.php" class="bouton bouton-secondaire">Annuler</a>
       </div>
     </form>
   </div>

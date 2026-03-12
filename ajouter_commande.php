@@ -21,39 +21,39 @@ $prods = $pdo->query('SELECT id, reference, nom, stock_actuel FROM produits ORDE
     .ligne-commande { margin-bottom: 15px; display: flex; gap: 10px; align-items: center; }
   </style>
 </head>
-<body class="app-wrap">
+<body class="conteneur-app">
 <?php include INCLUDES_PATH . 'header.php'; ?>
-<main class="main-content">
-  <h1 class="page-title">Initier une nouvelle commande</h1>
+<main class="contenu-principal">
+  <h1 class="titre-page">Initier une nouvelle commande</h1>
   
-  <div class="card" style="max-width: 800px; margin: 0 auto;">
+  <div class="carte" style="max-width: 800px; margin: 0 auto;">
     <form id="form-nouvelle-commande">
-      <div class="form-group">
+      <div class="form">
         <label for="commande-motif">Motif de la demande *</label>
-        <textarea id="commande-motif" name="motif" class="form-control" rows="2" placeholder="Ex: Réapprovisionnement du service IT" required></textarea>
+        <textarea id="commande-motif" name="motif" class="info-verification" rows="2" placeholder="Ex: Réapprovisionnement du service IT" required></textarea>
       </div>
       
-      <div class="form-group">
+      <div class="form">
         <label>Produits à commander</label>
         <div id="lignes-commande">
           <!-- Template de ligne -->
           <div class="ligne-commande">
-            <select name="produit_id[]" class="form-control produit-select" style="flex: 1;">
+            <select name="produit_id[]" class="info-verification produit-select" style="flex: 1;">
               <option value="">-- Choisir un produit --</option>
               <?php foreach ($prods as $pr): ?>
               <option value="<?= (int)$pr['id'] ?>"><?= htmlspecialchars($pr['reference'] . ' - ' . $pr['nom']) ?> (En stock: <?= (int)$pr['stock_actuel'] ?>)</option>
               <?php endforeach; ?>
             </select>
-            <input type="number" name="qte[]" class="form-control" min="1" value="1" style="width:100px;" placeholder="Qté">
-            <button type="button" class="btn btn-sm btn-danger btn-supprimer-ligne">X</button>
+            <input type="number" name="qte[]" class="info-verification" min="1" value="1" style="width:100px;" placeholder="Qté">
+            <button type="button" class="bouton bouton-petit bouton-danger btn-supprimer-ligne">X</button>
           </div>
         </div>
-        <button type="button" class="btn btn-sm btn-secondary" id="btn-ajouter-ligne" style="margin-top: 10px;">+ Ajouter un produit</button>
+        <button type="button" class="bouton bouton-petit bouton-secondaire" id="btn-ajouter-ligne" style="margin-top: 10px;">+ Ajouter un produit</button>
       </div>
       
       <div style="margin-top: 20px; display: flex; gap: 10px;">
-        <button type="submit" class="btn btn-primary">Créer la commande</button>
-        <a href="commandes.php" class="btn btn-secondary">Annuler</a>
+        <button type="submit" class="bouton bouton-principal">Créer la commande</button>
+        <a href="commandes.php" class="bouton bouton-secondaire">Annuler</a>
       </div>
     </form>
   </div>

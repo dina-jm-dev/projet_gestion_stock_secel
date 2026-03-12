@@ -24,23 +24,23 @@ $liste_produits = $is_admin ? $pdo->query('SELECT id, reference, nom FROM produi
   <title>Stocks - <?= htmlspecialchars(APP_NAME) ?></title>
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body class="app-wrap">
+<body class="conteneur-app">
 <?php include INCLUDES_PATH . 'header.php'; ?>
-<main class="main-content">
-  <h1 class="page-title">Stocks</h1>
+<main class="contenu-principal">
+  <h1 class="titre-page">Stocks</h1>
 
   <?php if (isset($_GET['msg']) && $_GET['msg'] === 'ok'): ?>
-  <div class="alert alert-success" id="flash">Mouvement enregistré.</div>
+  <div class="alerte alerte-succes" id="flash">Mouvement enregistré.</div>
   <?php endif; ?>
 
   <?php if ($is_admin): ?>
-  <div class="toolbar">
-    <a href="ajouter_stock.php" class="btn btn-primary">Ajuster un stock</a>
+  <div class="barre-outils">
+    <a href="ajouter_stock.php" class="bouton bouton-principal">Ajuster un stock</a>
   </div>
   <?php endif; ?>
 
-  <div class="table-wrap">
-    <table class="data-table">
+  <div class="conteneur-tableau">
+    <table class="tableau-donnees">
       <thead>
         <tr>
           <th>Référence</th>
@@ -61,7 +61,7 @@ $liste_produits = $is_admin ? $pdo->query('SELECT id, reference, nom FROM produi
           <td><?= (int)$p['seuil_alerte'] ?></td>
           <?php if ($is_admin): ?>
           <td class="actions">
-            <a href="ajouter_stock.php?id=<?= (int)$p['id'] ?>" class="btn btn-sm btn-primary">Ajuster</a>
+            <a href="ajouter_stock.php?id=<?= (int)$p['id'] ?>" class="bouton bouton-petit bouton-principal">Ajuster</a>
           </td>
           <?php endif; ?>
         </tr>

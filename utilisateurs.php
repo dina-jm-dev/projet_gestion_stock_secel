@@ -25,24 +25,24 @@ $utilisateurs = $stmt->fetchAll();
   <title>Utilisateurs - <?= htmlspecialchars(APP_NAME) ?></title>
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body class="app-wrap">
+<body class="conteneur-app">
 <?php include INCLUDES_PATH . 'header.php'; ?>
-<main class="main-content">
-  <h1 class="page-title">Gestion des utilisateurs</h1>
+<main class="contenu-principal">
+  <h1 class="titre-page">Gestion des utilisateurs</h1>
 
   <?php if ($msg === 'success'): ?>
-  <div class="alert alert-success" id="flash">Opération effectuée avec succès.</div>
+  <div class="alerte alerte-succes" id="flash">Opération effectuée avec succès.</div>
   <?php endif; ?>
   <?php if ($msg === 'error'): ?>
-  <div class="alert alert-error" id="flash">Une erreur est survenue.</div>
+  <div class="alerte alerte-danger" id="flash">Une erreur est survenue.</div>
   <?php endif; ?>
 
-  <div class="toolbar">
-    <a href="ajouter_utilisateur.php" class="btn btn-primary">Ajouter un utilisateur</a>
+  <div class="barre-outils">
+    <a href="ajouter_utilisateur.php" class="bouton bouton-principal">Ajouter un utilisateur</a>
   </div>
 
-  <div class="table-wrap">
-    <table class="data-table">
+  <div class="conteneur-tableau">
+    <table class="tableau-donnees">
       <thead>
         <tr>
           <th>Login</th>
@@ -70,9 +70,9 @@ $utilisateurs = $stmt->fetchAll();
           </td>
           <td><?= date('d/m/Y', strtotime($u['date_creation'])) ?></td>
           <td class="actions">
-            <a href="ajouter_utilisateur.php?id=<?= (int)$u['id'] ?>" class="btn btn-sm btn-secondary">Modifier</a>
+            <a href="ajouter_utilisateur.php?id=<?= (int)$u['id'] ?>" class="bouton bouton-petit bouton-secondaire">Modifier</a>
             <?php if ((int)$u['id'] !== secel_user()['id']): ?>
-            <button type="button" class="btn btn-sm btn-danger btn-delete-user" data-id="<?= (int)$u['id'] ?>" data-login="<?= htmlspecialchars($u['login']) ?>">Supprimer / Désactiver</button>
+            <button type="button" class="bouton bouton-petit bouton-danger btn-delete-user" data-id="<?= (int)$u['id'] ?>" data-login="<?= htmlspecialchars($u['login']) ?>">Supprimer / Désactiver</button>
             <?php endif; ?>
           </td>
         </tr>

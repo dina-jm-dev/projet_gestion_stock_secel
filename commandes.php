@@ -54,26 +54,26 @@ if (!$commande) {
   <title>Commandes - <?= htmlspecialchars(APP_NAME) ?></title>
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body class="app-wrap">
+<body class="conteneur-app">
 <?php include INCLUDES_PATH . 'header.php'; ?>
-<main class="main-content">
-  <h1 class="page-title">Commandes</h1>
+<main class="contenu-principal">
+  <h1 class="titre-page">Commandes</h1>
 
   <?php if (isset($_GET['msg']) && $_GET['msg'] === 'ok'): ?>
-  <div class="alert alert-success" id="flash">Commande enregistrée.</div>
+  <div class="alerte alerte-succes" id="flash">Commande enregistrée.</div>
   <?php endif; ?>
   <?php if (isset($_GET['msg']) && $_GET['msg'] === 'validee'): ?>
-  <div class="alert alert-success" id="flash">Commande validée. Stocks mis à jour.</div>
+  <div class="alerte alerte-succes" id="flash">Commande validée. Stocks mis à jour.</div>
   <?php endif; ?>
   <?php if (isset($_GET['msg']) && $_GET['msg'] === 'refusee'): ?>
-  <div class="alert alert-info" id="flash">Commande refusée.</div>
+  <div class="alerte alerte-info" id="flash">Commande refusée.</div>
   <?php endif; ?>
 
   <?php if ($commande): ?>
   <!-- Détail commande -->
-  <p><a href="commandes.php" class="btn btn-secondary">← Retour à la liste</a></p>
-  <div class="table-wrap">
-    <table class="data-table">
+  <p><a href="commandes.php" class="bouton bouton-secondaire">← Retour à la liste</a></p>
+  <div class="conteneur-tableau">
+    <table class="tableau-donnees">
       <tr><th>N° commande</th><td>#<?= (int)$commande['id'] ?></td></tr>
       <tr><th>Date</th><td><?= date('d/m/Y H:i', strtotime($commande['date_creation'])) ?></td></tr>
       <tr><th>Demandeur</th><td><?= htmlspecialchars($commande['u_prenom'] . ' ' . $commande['u_nom']) ?></td></tr>
@@ -83,8 +83,8 @@ if (!$commande) {
     </table>
   </div>
   <h3 style="margin-top:20px;">Lignes de la commande</h3>
-  <div class="table-wrap">
-    <table class="data-table">
+  <div class="conteneur-tableau">
+    <table class="tableau-donnees">
       <thead>
         <tr>
           <th>Produit</th>
@@ -112,21 +112,21 @@ if (!$commande) {
     </table>
   </div>
   <?php if ($is_admin && $commande['statut'] === 'en_attente'): ?>
-  <div class="toolbar" style="margin-top:16px;">
-    <button type="button" class="btn btn-primary" id="btn-valider-commande" data-id="<?= (int)$commande['id'] ?>">Valider (quantités ci-dessus)</button>
-    <button type="button" class="btn btn-danger" id="btn-refuser-commande" data-id="<?= (int)$commande['id'] ?>">Refuser la commande</button>
+  <div class="barre-outils" style="margin-top:16px;">
+    <button type="button" class="bouton bouton-principal" id="btn-valider-commande" data-id="<?= (int)$commande['id'] ?>">Valider (quantités ci-dessus)</button>
+    <button type="button" class="bouton bouton-danger" id="btn-refuser-commande" data-id="<?= (int)$commande['id'] ?>">Refuser la commande</button>
   </div>
   <div id="validation-msg"></div>
   <?php endif; ?>
 
   <?php else: ?>
   <!-- Liste des commandes -->
-  <div class="toolbar">
-    <a href="ajouter_commande.php" class="btn btn-primary">Nouvelle commande</a>
+  <div class="barre-outils">
+    <a href="ajouter_commande.php" class="bouton bouton-principal">Nouvelle commande</a>
   </div>
 
-  <div class="table-wrap">
-    <table class="data-table">
+  <div class="conteneur-tableau">
+    <table class="tableau-donnees">
       <thead>
         <tr>
           <th>N°</th>
@@ -143,7 +143,7 @@ if (!$commande) {
           <td><?= date('d/m/Y H:i', strtotime($c['date_creation'])) ?></td>
           <?php if ($is_admin): ?><td><?= htmlspecialchars($c['prenom'] . ' ' . $c['nom']) ?></td><?php endif; ?>
           <td><span class="badge badge-<?= htmlspecialchars($c['statut']) ?>"><?= htmlspecialchars(ucfirst(str_replace('_', ' ', $c['statut']))) ?></span></td>
-          <td><a href="commandes.php?id=<?= (int)$c['id'] ?>" class="btn btn-sm btn-secondary">Voir</a></td>
+          <td><a href="commandes.php?id=<?= (int)$c['id'] ?>" class="bouton bouton-petit bouton-secondaire">Voir</a></td>
         </tr>
         <?php endforeach; ?>
       </tbody>

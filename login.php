@@ -50,24 +50,24 @@ $csrf = secel_csrf_token();
   <title>Connexion - <?= htmlspecialchars(APP_NAME) ?></title>
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body class="page-login">
-  <div class="login-box">
+<body class="page-connexion">
+  <div class="connexion-formulaire">
     <h1><?= htmlspecialchars(APP_NAME) ?></h1>
     <?php if ($error): ?>
-    <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
+    <div class="alerte alerte-danger"><?= htmlspecialchars($error) ?></div>
     <?php endif; ?>
     <form method="post" action="login.php">
       <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf) ?>">
-      <div class="form-group">
+      <div class="form">
         <label for="login">Identifiant</label>
-        <input type="text" id="login" name="login" class="form-control" required autofocus
+        <input type="text" id="login" name="login" class="info-verification" required autofocus
                value="<?= htmlspecialchars($_POST['login'] ?? '') ?>">
       </div>
-      <div class="form-group">
+      <div class="form">
         <label for="password">Mot de passe</label>
-        <input type="password" id="password" name="password" class="form-control" required>
+        <input type="password" id="password" name="password" class="info-verification" required>
       </div>
-      <button type="submit" class="btn btn-primary">Se connecter</button>
+      <button type="submit" class="bouton bouton-principal">Se connecter</button>
     </form>
   </div>
 </body>
