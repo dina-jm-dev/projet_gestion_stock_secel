@@ -83,9 +83,25 @@ body {
   gap: 16px;
 }
 
+/* Logo à gauche du titre de l'application */
+.entete-marque {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.logo-image {
+  height: 36px;
+  width: auto;
+  max-width: 120px;
+  object-fit: contain;
+  display: block;
+}
+
 .logo {
   font-weight: 700;
-  font-size: 1.25rem;
+  font-size: 2rem;
   color: var(--blanc);
   text-decoration: none;
   white-space: nowrap;

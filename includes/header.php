@@ -9,13 +9,17 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
 ?>
 <header class="entete-site">
   <div class="entete-interne">
-    <a href="dashboard.php" class="logo"><?= htmlspecialchars(APP_NAME) ?></a>
+    <div class="entete-marque">
+      <img src="assets/img/logo_secel.png" alt="SECEL" class="logo-image" width="40" height="40">
+      <a href="dashboard.php" class="logo"><?= htmlspecialchars(APP_NAME) ?></a>
+    </div>
     <nav class="nav-principale">
       <a href="dashboard.php" class="lien-nav <?= $current_page === 'dashboard' ? 'actif' : '' ?>">Tableau de bord</a>
       <a href="produits.php" class="lien-nav <?= $current_page === 'produits' ? 'actif' : '' ?>">Produits</a>
       <a href="stocks.php" class="lien-nav <?= $current_page === 'stocks' ? 'actif' : '' ?>">Stocks</a>
       <a href="commandes.php" class="lien-nav <?= $current_page === 'commandes' ? 'actif' : '' ?>">Commandes</a>
       <?php if (secel_is_admin()): ?>
+      <a href="historique.php" class="lien-nav <?= $current_page === 'historique' ? 'actif' : '' ?>">Historique</a>
       <a href="utilisateurs.php" class="lien-nav <?= $current_page === 'utilisateurs' ? 'actif' : '' ?>">Utilisateurs</a>
       <?php endif; ?>
     </nav>

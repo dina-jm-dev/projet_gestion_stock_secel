@@ -30,7 +30,9 @@ projet_gestion_stock_secel/
 ├── logout.php         # Déconnexion
 ├── dashboard.php      # Tableau de bord
 ├── produits.php       # Liste / CRUD produits
-├── stocks.php         # Stocks, ajustements, historique
+├── stocks.php         # Consultation des stocks
+├── ajouter_stock.php  # Saisie entrée/sortie ou ajustement (admin)
+├── historique.php     # Liste des mouvements de stock (admin)
 ├── commandes.php      # Liste, détail, nouvelle commande, validation
 └── utilisateurs.php   # Gestion utilisateurs (admin)
 ```

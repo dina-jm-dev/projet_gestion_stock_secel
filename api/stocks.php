@@ -33,7 +33,10 @@ switch ($action) {
             echo json_encode(['success' => false, 'message' => 'Données invalides.']);
             exit;
         }
-        if (!in_array($type, ['ajustement_plus', 'ajustement_moins'], true)) {
+        // Types autorisés : entrée/sortie explicites + ajustements (même logique que entree/sortie)
+        $types_plus = ['entree', 'ajustement_plus'];
+        $types_moins = ['sortie', 'ajustement_moins'];
+        if (!in_array($type, array_merge($types_plus, $types_moins), true)) {
             echo json_encode(['success' => false, 'message' => 'Type invalide.']);
             exit;
         }
@@ -50,12 +53,12 @@ switch ($action) {
                 exit;
             }
             $stock_avant = (int)$row['stock_actuel'];
-            if ($type === 'ajustement_moins' && $qte > $stock_avant) {
+            if (in_array($type, $types_moins, true) && $qte > $stock_avant) {
                 $pdo->rollBack();
                 echo json_encode(['success' => false, 'message' => 'Stock insuffisant.']);
                 exit;
             }
-            $stock_apres = $type === 'ajustement_plus' ? $stock_avant + $qte : $stock_avant - $qte;
+            $stock_apres = in_array($type, $types_plus, true) ? $stock_avant + $qte : $stock_avant - $qte;
             $pdo->prepare('UPDATE produits SET stock_actuel = ? WHERE id = ?')->execute([$stock_apres, $produit_id]);
             $pdo->prepare('INSERT INTO mouvements_stock (produit_id, type, qte, stock_avant, stock_apres, user_id, motif) VALUES (?,?,?,?,?,?,?)')
                 ->execute([$produit_id, $type, $qte, $stock_avant, $stock_apres, secel_user()['id'], $motif]);
@@ -67,6 +70,28 @@ switch ($action) {
         }
         break;
 
+    case 'historique':
+        // Liste des derniers mouvements (pour AJAX ou réutilisation), filtre optionnel par produit
+        $produit_id = (int)($_GET['produit_id'] ?? 0);
+        if ($produit_id > 0) {
+            $st = $pdo->prepare(
+                'SELECT m.type, m.qte, m.stock_avant, m.stock_apres, m.date_mouvement, m.motif, u.prenom, u.nom 
+                FROM mouvements_stock m 
+                LEFT JOIN utilisateurs u ON u.id = m.user_id 
+                WHERE m.produit_id = ? ORDER BY m.date_mouvement DESC LIMIT 50'
+            );
+            $st->execute([$produit_id]);
+        } else {
+            $st = $pdo->query(
+                'SELECT m.type, m.qte, m.stock_avant, m.stock_apres, m.date_mouvement, m.motif, u.prenom, u.nom 
+                FROM mouvements_stock m 
+                LEFT JOIN utilisateurs u ON u.id = m.user_id 
+                ORDER BY m.date_mouvement DESC LIMIT 50'
+            );
+        }
+        $rows = $st->fetchAll();
+        echo json_encode(['success' => true, 'mouvements' => $rows]);
+        break;
 
     default:
         http_response_code(400);
